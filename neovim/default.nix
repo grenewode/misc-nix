@@ -9,6 +9,7 @@
 
     configure = {
       customRC = ''
+        set rtp+=${fzf}
         set hidden
         set mouse=n
         set mousemodel=popup_setpos
@@ -184,7 +185,7 @@
       packages.myVimPackage = with vimPlugins; {
         # see examples below how to use custom packages
         start = [
-          fzf-vim
+          # fzf-vim
           fzfWrapper
           vim-airline
           vim-airline-themes
