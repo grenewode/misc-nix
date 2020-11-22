@@ -153,6 +153,8 @@
         let g:ale_fixers = {
         \   '*': ['remove_trailing_lines', 'trim_whitespace'],
         \   'nix': ['nixpkgs-fmt'],
+        \   'rust': ['rustfmt'],
+        \   'python': ['autopep8'],
         \}
 
         let g:ale_rust_cargo_check_tests = 1
