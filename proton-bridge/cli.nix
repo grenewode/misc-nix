@@ -6,7 +6,7 @@
 , lib
 }:
 buildGoModule rec {
-  pname = "protonmail-bridge";
+  pname = "proton-bridge";
   version = "1.5.2";
 
   nativeBuildInputs = [ pkg-config ];
@@ -16,29 +16,25 @@ buildGoModule rec {
     owner = "ProtonMail";
     repo = "proton-bridge";
 
-    rev = "br-1.5.2";
+    rev = "br-${version}";
 
     hash = "sha256:1mv7fwapcarii43nnsgk7ifqlah07k54zk6vxxxmrp04gy0mzki6";
   };
 
   # subPackages = [ "cmd/Desktop-Bridge" ];
 
-  vendorSha256 = "06yhv1f8kq16p4zbcw77gv8fna3s7vqxj14awsr5gcs947zf7w80";
-
-  buildFlagsArray = [
-    ''-tags="pmapi_prod nogui"''
-    ''-ldflags="-X main.Version=${version} -X main.Revision=${src.rev}"''
-    # ''-ldflags="-X main.Version=${version}"''
-  ];
+  vendorSha256 = "01d6by8xj9py72lpfns08zqnsym98v8imb7d6hgmnzp4hfqzbz3c";
 
   buildPhase = ''
     mkdir -p $out
 
     go install \
       -tags="pmapi_prod nogui" \
-      -ldflags="-X main.Version=${version}" \
+      -ldflags="-X github.com/ProtonMail/proton-bridge/pkg/constants.Version=${version}-git -X github.com/ProtonMail/proton-bridge/pkg/constants.Revision=${src.rev}" \
       -v -p $NIX_BUILD_CORES \
       ./cmd/Desktop-Bridge 2>&1
+
+
   '';
 
   doCheck = false;
