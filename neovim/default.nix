@@ -92,8 +92,6 @@ neovim.override {
 
       let g:indent_guides_enable_on_vim_startup = 1
 
-      " let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
-
       let g:airline_powerline_fonts = 1
 
       let g:eighties_enabled = 1
@@ -179,6 +177,9 @@ neovim.override {
       endfunction
 
       command! -nargs=* -bang Rg call RipgrepFzf(<q-args>, <bang>0)
+
+      command! -bang -nargs=* Files
+        \ call fzf#run(fzf#wrap({'source': 'rg --files --hidden --no-ignore-vcs --smart-case --glob "!{.git/*,_darcs/*}"','down': '40%','options': '--expect=ctrl-t,ctrl-x,ctrl-v --multi --reverse' }))
 
       nnoremap <silent> <C-p> :Files<CR>
       nnoremap <silent> <C-f> :Rg<CR>
