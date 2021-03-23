@@ -168,6 +168,7 @@ neovim.override {
 
       let g:ale_linters = {
           \ 'rust': ['rls', 'cargo'],
+          \ 'cpp': ['clangd'],
           \ }
 
       let g:ale_fixers = {
@@ -175,7 +176,7 @@ neovim.override {
       \   'nix': ['nixpkgs-fmt'],
       \   'rust': ['rustfmt'],
       \   'python': ['autopep8'],
-      \   'cpp': ['clang-format', 'clangtidy'],
+      \   'cpp': ['clang-format'],
       \}
 
       let g:ale_rust_cargo_check_tests = 1
