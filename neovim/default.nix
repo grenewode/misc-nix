@@ -153,6 +153,7 @@ neovim.override {
       \   'nix': ['nixpkgs-fmt'],
       \   'rust': ['rustfmt'],
       \   'python': ['autopep8'],
+      \   'cpp': ['clang-format', 'clangtidy'],
       \}
 
       let g:ale_rust_cargo_check_tests = 1
