@@ -1,4 +1,26 @@
-{ neovim, fzf, nixpkgs-fmt, ripgrep, stdenv, bash, vimPlugins }:
+{ neovim
+, fzf
+, nixpkgs-fmt
+, ripgrep
+, stdenv
+, bash
+, fetchFromGitHub
+, vimPlugins
+, vimUtils
+, lib
+}:
+let ale = vimUtils.buildVimPluginFrom2Nix rec {
+  pname = "ale";
+  version = "3.1.0";
+  src = fetchFromGitHub {
+    owner = "dense-analysis";
+    repo = "ale";
+    rev = "v${version}";
+    hash = "sha256:1jzfdbfw333r929l5bl1ca1dv9b6yyhsjhk3gdf7wxklbzcrww3p";
+  };
+  meta.homepage = "https://github.com/dense-analysis/ale/";
+};
+in
 neovim.override {
   viAlias = true;
   vimAlias = true;
