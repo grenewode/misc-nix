@@ -164,6 +164,10 @@ neovim.override {
       let g:ale_virtualtext_cursor = 1
       let g:ale_list_vertical = 0
 
+      let g:ale_c_parse_makefile = 1
+      let g:ale_cpp_cc_options = '-std=c++20'
+
+
       let g:ale_shell = "${bash}/bin/bash"
 
       let g:ale_linters = {
