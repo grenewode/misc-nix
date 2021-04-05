@@ -207,7 +207,7 @@ neovim.override {
       command! -nargs=* -bang Rg call RipgrepFzf(<q-args>, <bang>0)
 
       command! -bang -nargs=* Files
-        \ call fzf#run(fzf#wrap({'source': 'rg --files --hidden --no-ignore-vcs --smart-case --glob "!{.git/*,_darcs/*}"','down': '40%','options': '--expect=ctrl-t,ctrl-x,ctrl-v --multi --reverse' }))
+        \ call fzf#run(fzf#wrap({'source': '${ripgrep}/bin/rg --files --hidden --no-ignore-vcs --smart-case --glob "!{.git/*,_darcs/*}"','down': '40%','options': '--expect=ctrl-t,ctrl-x,ctrl-v --multi --reverse' }))
 
       nnoremap <silent> <C-p> :Files<CR>
       nnoremap <silent> <C-f> :Rg<CR>
