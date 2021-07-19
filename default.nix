@@ -7,6 +7,7 @@ let
   unstable-pkgs = import nixpkgs-unstable { inherit system; };
 in
 {
-  neovim = unstable-pkgs.callPackage ./neovim { };
+  neovim = pkgs.callPackage ./neovim { };
   proton-bridge-cli = pkgs.callPackage ./proton-bridge/cli.nix { };
+  wally = pkgs.callPackage ./zsa/wally { };
 }

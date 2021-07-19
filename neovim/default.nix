@@ -7,25 +7,42 @@
 , fetchFromGitHub
 , vimPlugins
 , vimUtils
+, nodePackages
+, shellcheck
+, shfmt
 , lib
 }:
-let ale = vimUtils.buildVimPluginFrom2Nix rec {
-  pname = "ale";
-  version = "3.1.0";
-  src = fetchFromGitHub {
-    owner = "dense-analysis";
-    repo = "ale";
-    rev = "v${version}";
-    hash = "sha256:1jzfdbfw333r929l5bl1ca1dv9b6yyhsjhk3gdf7wxklbzcrww3p";
+let
+  ale = vimUtils.buildVimPluginFrom2Nix rec {
+    pname = "ale";
+    version = "3.1.0";
+    src = fetchFromGitHub {
+      owner = "dense-analysis";
+      repo = "ale";
+      rev = "v${version}";
+      hash = "sha256:1jzfdbfw333r929l5bl1ca1dv9b6yyhsjhk3gdf7wxklbzcrww3p";
+    };
+    meta.homepage = "https://github.com/dense-analysis/ale/";
   };
-  meta.homepage = "https://github.com/dense-analysis/ale/";
-};
+  bash-language-server = nodePackages.bash-language-server;
 in
-neovim.override {
+(
+  neovim.overrideAttrs (
+    attrs: {
+      buildInputs = (attrs.buildInputs or [ ]) ++ [
+        ripgrep
+        bash-language-server
+        shellcheck
+        shfmt
+        nixpkgs-fmt
+      ];
+    }
+  )
+).override {
   viAlias = true;
   vimAlias = true;
   withNodeJs = true;
-  withPython = true;
+  # withPython = true;
   withPython3 = true;
   withRuby = true;
 
@@ -173,11 +190,13 @@ neovim.override {
       let g:ale_linters = {
           \ 'rust': ['rls', 'cargo'],
           \ 'cpp': ['clangd'],
+          \ 'sh': [ 'language_server', 'shell', 'shellcheck' ],
           \ }
 
       let g:ale_fixers = {
       \   '*': ['remove_trailing_lines', 'trim_whitespace'],
       \   'nix': ['nixpkgs-fmt'],
+      \   'sh': [ 'shfmt' ],
       \   'rust': ['rustfmt'],
       \   'python': ['autopep8'],
       \   'cpp': ['clang-format'],
@@ -190,6 +209,10 @@ neovim.override {
 
       let g:ale_python_auto_pipenv = 1
       let g:ale_nix_nixpkgsfmt_executable = "${nixpkgs-fmt}/bin/nixpkgs-fmt"
+
+      let g:ale_sh_language_server_executable = "${bash-language-server}/bin/bash-language-server"
+      let g:ale_sh_shellcheck_executable = "${shellcheck}/bin/shellcheck"
+      let g:ale_sh_shfmt_executable = "${shfmt}/bin/shfmt"
 
       augroup CloseLoclistWindowGroup
       autocmd!
@@ -211,6 +234,13 @@ neovim.override {
 
       nnoremap <silent> <C-p> :Files<CR>
       nnoremap <silent> <C-f> :Rg<CR>
+
+      autocmd FileType help nnoremap <buffer> <CR> <C-]>
+      autocmd FileType help nnoremap <buffer> <BS> <C-T>
+      autocmd FileType help nnoremap <buffer> o /'\l\{2,\}'<CR>
+      autocmd FileType help nnoremap <buffer> O ?'\l\{2,\}'<CR>
+      autocmd FileType help nnoremap <buffer> s /\|\zs\S\+\ze\|<CR>
+      autocmd FileType help nnoremap <buffer> S ?\|\zs\S\+\ze\|<CR>
     '';
 
     packages.myVimPackage = with vimPlugins; {
