@@ -1,41 +1,75 @@
 { buildGoModule
 , fetchFromGitHub
+, fetchgit
 , pkg-config
 , libsecret
+, which
 , qt5
+, git
+, bintools
 , lib
 }:
 buildGoModule rec {
   pname = "proton-bridge";
-  version = "1.5.2";
+  version = "1.8.7";
 
-  nativeBuildInputs = [ pkg-config ];
+  nativeBuildInputs = [ pkg-config which ];
   buildInputs = [ libsecret ];
 
-  src = fetchFromGitHub {
-    owner = "ProtonMail";
-    repo = "proton-bridge";
+  # src = fetchFromGitHub {
+  #   owner = "ProtonMail";
+  #   repo = "proton-bridge";
 
-    rev = "br-${version}";
+  #   rev = "v${version}";
+  #   hash = "sha256:1887qa59i4vj3q71sd48hdcrinq0gm235qync6qqapsy0ywcyabg";
 
-    hash = "sha256:1mv7fwapcarii43nnsgk7ifqlah07k54zk6vxxxmrp04gy0mzki6";
+  # };
+
+  src = fetchgit {
+    url = "https://github.com/ProtonMail/proton-bridge.git";
+    rev = "v${version}";
+
+    sha256 = "1887qa59i4vj3q71sd48hdcrinq0gm235qync6qqapsy0ywcyabg";
   };
 
   # subPackages = [ "cmd/Desktop-Bridge" ];
 
-  vendorSha256 = "01d6by8xj9py72lpfns08zqnsym98v8imb7d6hgmnzp4hfqzbz3c";
+  vendorSha256 = "0lv4fwfmmqb7h8s9n801l1clx7dr2zdbnggr1wz6bbvi5gafasw3";
 
   buildPhase = ''
-    mkdir -p $out
+    mkdir -p "$out/bin"
 
-    go install \
-      -tags="pmapi_prod nogui" \
-      -ldflags="-X github.com/ProtonMail/proton-bridge/pkg/constants.Version=${version}-git -X github.com/ProtonMail/proton-bridge/pkg/constants.Revision=${src.rev}" \
-      -v -p $NIX_BUILD_CORES \
-      ./cmd/Desktop-Bridge 2>&1
+    patchShebangs ./utils/credits.sh
+    substituteInPlace Makefile \
+      --replace "\$(shell git rev-parse --short=10 HEAD)" "${src.rev}" \
+    # patchShebangs Makefile 
+    
+    make build-nogui
 
-
+    cp ./proton-bridge "$out/bin/proton-bridge" 
   '';
+
+  # buildPhase = ''
+  #   mkdir -p $out/bin
+
+  #   pushd $(mktemp -d)
+  #   cp --recursive "$src/." .
+  #   chmod --recursive +w .
+  #   ls -lah
+
+  #   pushd ./utils
+  #   bash credits.sh bridge
+  #   bash credits.sh importexport
+  #   popd
+
+  #   go install \
+  #     -tags="" \
+  #     -ldflags="-X github.com/ProtonMail/proton-bridge/internal/constants.Version=${version}-git \ 
+  #       -X github.com/ProtonMail/proton-bridge/internal/constants.Revision=${src.rev}" \
+  #     -v -p $NIX_BUILD_CORES \
+  #     ./cmd/Desktop-Bridge 2>&1
+  #     popd
+  # '';
 
   doCheck = false;
 }
