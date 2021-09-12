@@ -11,38 +11,15 @@
 , shellcheck
 , shfmt
 , lib
+, ale
 }:
 let
-  ale = vimUtils.buildVimPluginFrom2Nix rec {
-    pname = "ale";
-    version = "3.1.0";
-    src = fetchFromGitHub {
-      owner = "dense-analysis";
-      repo = "ale";
-      rev = "v${version}";
-      hash = "sha256:1jzfdbfw333r929l5bl1ca1dv9b6yyhsjhk3gdf7wxklbzcrww3p";
-    };
-    meta.homepage = "https://github.com/dense-analysis/ale/";
-  };
   bash-language-server = nodePackages.bash-language-server;
 in
-(
-  neovim.overrideAttrs (
-    attrs: {
-      buildInputs = (attrs.buildInputs or [ ]) ++ [
-        ripgrep
-        bash-language-server
-        shellcheck
-        shfmt
-        nixpkgs-fmt
-      ];
-    }
-  )
-).override {
+neovim.override {
   viAlias = true;
   vimAlias = true;
   withNodeJs = true;
-  # withPython = true;
   withPython3 = true;
   withRuby = true;
 
@@ -245,7 +222,7 @@ in
 
     packages.myVimPackage = with vimPlugins; {
       # see examples below how to use custom packages
-      start = [
+      start = (with vimPlugins; [
         fzf-vim
         fzfWrapper
         vim-airline
@@ -258,9 +235,8 @@ in
         vim-commentary
         vim-sensible
         vim-vinegar
-        vim-polyglot
+        # vim-polyglot
         vim-multiple-cursors
-        vim-SyntaxRange
         auto-pairs
         easymotion
         rainbow
@@ -268,6 +244,7 @@ in
         editorconfig-vim
         gruvbox
         deoplete-nvim
+      ]) ++ [
         ale
       ];
       opt = [ ];

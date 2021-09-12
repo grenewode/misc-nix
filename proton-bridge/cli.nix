@@ -8,6 +8,7 @@
 , git
 , bintools
 , lib
+, proton-bridge-src
 }:
 buildGoModule rec {
   pname = "proton-bridge";
@@ -16,21 +17,7 @@ buildGoModule rec {
   nativeBuildInputs = [ pkg-config which ];
   buildInputs = [ libsecret ];
 
-  # src = fetchFromGitHub {
-  #   owner = "ProtonMail";
-  #   repo = "proton-bridge";
-
-  #   rev = "v${version}";
-  #   hash = "sha256:1887qa59i4vj3q71sd48hdcrinq0gm235qync6qqapsy0ywcyabg";
-
-  # };
-
-  src = fetchgit {
-    url = "https://github.com/ProtonMail/proton-bridge.git";
-    rev = "v${version}";
-
-    sha256 = "1887qa59i4vj3q71sd48hdcrinq0gm235qync6qqapsy0ywcyabg";
-  };
+  src = proton-bridge-src;
 
   # subPackages = [ "cmd/Desktop-Bridge" ];
 
