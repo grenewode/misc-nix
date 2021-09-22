@@ -1,22 +1,5 @@
 {
   "nodes": {
-    "ale-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1612642408,
-        "narHash": "sha256-d3Ce2V90dn5ce2NCqaH3ZqXdgmKBrkKTSHmMwd1q7ss=",
-        "owner": "dense-analysis",
-        "repo": "ale",
-        "rev": "388cf3374312b05122151bc68691bf09a69ff840",
-        "type": "github"
-      },
-      "original": {
-        "owner": "dense-analysis",
-        "ref": "v3.1.0",
-        "repo": "ale",
-        "type": "github"
-      }
-    },
     "flake-utils": {
       "locked": {
         "lastModified": 1629481132,
@@ -66,7 +49,6 @@
     },
     "root": {
       "inputs": {
-        "ale-src": "ale-src",
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs",
         "proton-bridge-src": "proton-bridge-src"

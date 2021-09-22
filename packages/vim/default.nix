@@ -11,7 +11,6 @@
 , shellcheck
 , shfmt
 , lib
-, ale
 }:
 let
   bash-language-server = nodePackages.bash-language-server;
@@ -244,9 +243,8 @@ neovim.override {
         editorconfig-vim
         gruvbox
         deoplete-nvim
-      ]) ++ [
         ale
-      ];
+      ]);
       opt = [ ];
     };
   };
